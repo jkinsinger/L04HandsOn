@@ -34,22 +34,21 @@ router.get('/film', function(req, res) {
 
 router.get('/film/:id', function(req, res, next){
   let filmId = parseInt(req.params.id);
-  console.log(filmId);
 
+  let filmActorQuery = `
+  SELECT film.title, actor.first_name, actor.last_name FROM film INNER JOIN film_actor ON film.film_id = film_actor.film_id INNER JOIN actor ON film_actor.actor_id = actor.actor_id WHERE film.film_id = ${filmId}`
 
-  let idQuery = `SELECT * FROM WHERE film_id =${filmId} JOIN film_actor ON film.film_id = film_actor.film_id`
+  console.log(filmActorQuery);
 
-  console.log(idQuery);
-
-  connection.query(idQuery, (err, result) => {
-    console.log(result);
-    if (result.length > 0 ) {
-      res.render ('filmDetails', {
-        film: result[0]
-      });
+  connection.query(filmActorQuery, function(err, result) {
+    if (err) {
+      res.render ('err', {message: err.message})
     } else {
-      res.send('not a valid id.')
-      console.log(result)
+      console.log(result);
+      res.render('filmDetails', {
+        filmTitle: result[0].title,
+        films: result
+      });
     }
   });
 });
