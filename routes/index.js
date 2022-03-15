@@ -36,7 +36,8 @@ router.get('/film/:id', function(req, res, next){
   let filmId = parseInt(req.params.id);
   console.log(filmId);
 
-  let idQuery = `SELECT * FROM WHERE film_id =${filmId}`
+
+  let idQuery = `SELECT * FROM WHERE film_id =${filmId} JOIN film_actor ON film.film_id = film_actor.film_id`
 
   console.log(idQuery);
 
@@ -46,9 +47,11 @@ router.get('/film/:id', function(req, res, next){
       res.render ('filmDetails', {
         film: result[0]
       });
-    } else
+    } else {
       res.send('not a valid id.')
       console.log(result)
-  })
-})
+    }
+  });
+});
+
 module.exports = router;
